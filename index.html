@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPhone Secret Apps</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* iPhone */
+.iphone {
+    width: 390px;
+    height: 780px;
+    background: linear-gradient(145deg, #202020, #050505);
+    border: 8px solid #303030;
+    border-radius: 48px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(255,255,255,.15);
+}
+
+/* Screen */
+.screen {
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 20%, #496b9d, transparent 30%),
+        radial-gradient(circle at 80% 70%, #6d416f, transparent 35%),
+        linear-gradient(135deg, #18233b, #090b14);
+    padding: 70px 18px 25px;
+    position: relative;
+}
+
+/* Dynamic Island / Notch */
+.notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 34px;
+    background: #000;
+    border-radius: 25px;
+    z-index: 20;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.notch:hover {
+    width: 145px;
+}
+
+.notch::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #18243b;
+    border-radius: 50%;
+    right: 15px;
+    top: 13px;
+}
+
+/* Status bar */
+.status {
+    position: absolute;
+    top: 17px;
+    left: 20px;
+    right: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+/* Apps */
+.apps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 27px 12px;
+    margin-top: 25px;
+}
+
+.app {
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.app:hover {
+    transform: scale(1.08);
+}
+
+.icon {
+    width: 65px;
+    height: 65px;
+    margin: auto;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,.35);
+    background: linear-gradient(145deg,#ffffff,#bfc5d0);
+    color: #222;
+}
+
+.app:nth-child(1) .icon { background: linear-gradient(135deg,#ff8a8a,#ff3b30); }
+.app:nth-child(2) .icon { background: linear-gradient(135deg,#68e878,#16a34a); }
+.app:nth-child(3) .icon { background: linear-gradient(135deg,#66b3ff,#2563eb); }
+.app:nth-child(4) .icon { background: linear-gradient(135deg,#d59cff,#8b5cf6); }
+.app:nth-child(5) .icon { background: linear-gradient(135deg,#ffd166,#f59e0b); }
+.app:nth-child(6) .icon { background: linear-gradient(135deg,#67e8f9,#0891b2); }
+.app:nth-child(7) .icon { background: linear-gradient(135deg,#fb7185,#e11d48); }
+.app:nth-child(8) .icon { background: linear-gradient(135deg,#86efac,#22c55e); }
+.app:nth-child(9) .icon { background: linear-gradient(135deg,#c4b5fd,#7c3aed); }
+.app:nth-child(10) .icon { background: linear-gradient(135deg,#f9a8d4,#ec4899); }
+
+.app-name {
+    margin-top: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 0 2px 5px #000;
+}
+
+/* Bottom dock */
+.dock {
+    position: absolute;
+    bottom: 17px;
+    left: 15px;
+    right: 15px;
+    height: 82px;
+    border-radius: 28px;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.dock-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+}
+
+/* Password screen */
+.modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(15px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    padding: 25px;
+}
+
+.modal-box {
+    width: 100%;
+    background: rgba(30,30,35,.95);
+    border-radius: 28px;
+    padding: 30px 22px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+}
+
+.modal-box h2 {
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: #bbb;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+button {
+    border: none;
+    padding: 13px 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.open-btn {
+    background: white;
+    color: black;
+}
+
+.close-btn {
+    margin-top: 10px;
+    background: #333;
+    color: white;
+}
+
+/* Secret admin panel */
+.admin-panel {
+    position: absolute;
+    inset: 0;
+    background: rgba(5,5,10,.97);
+    z-index: 60;
+    display: none;
+    color: white;
+    padding: 65px 20px 25px;
+    overflow-y: auto;
+}
+
+.admin-panel h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-card {
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.admin-card strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.password {
+    color: #8ee7ff;
+    font-family: monospace;
+}
+
+.admin-close {
+    width: 100%;
+    margin-top: 10px;
+    background: white;
+}
+
+/* Information screen */
+.info-screen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg,#101827,#24152e);
+    z-index: 55;
+    display: none;
+    color: white;
+    padding: 90px 25px 30px;
+    text-align: center;
+}
+
+.info-icon {
+    width: 95px;
+    height: 95px;
+    margin: 0 auto 25px;
+    border-radius: 28px;
+    background: rgba(255,255,255,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+}
+
+.info-screen h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.message {
+    background: rgba(255,255,255,.1);
+    border-radius: 25px;
+    padding: 25px 18px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.back {
+    margin-top: 30px;
+    background: rgba(255,255,255,.15);
+    color: white;
+}
+
+.error {
+    color: #ff7070;
+    font-size: 13px;
+    min-height: 18px;
+    margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="iphone">
+
+    <div class="screen">
+
+        <!-- NOTCH -->
+        <div class="notch" onclick="openAdmin()"></div>
+
+        <div class="status">
+            <span>9:41</span>
+            <span>● ● ▰</span>
+        </div>
+
+        <!-- HOME APPS -->
+        <div class="apps" id="apps"></div>
+
+        <!-- DOCK -->
+        <div class="dock">
+            <div class="dock-icon">📞</div>
+            <div class="dock-icon">💬</div>
+            <div class="dock-icon">🌐</div>
+            <div class="dock-icon">🎵</div>
+        </div>
+
+        <!-- PASSWORD MODAL -->
+        <div class="modal" id="passwordModal">
+            <div class="modal-box">
+                <h2 id="selectedName"></h2>
+                <p>Enter Admin Password</p>
+
+                <input
+                    type="password"
+                    id="passwordInput"
+                    placeholder="Admin Password"
+                >
+
+                <div class="error" id="error"></div>
+
+                <button class="open-btn" onclick="checkPassword()">
+                    Open
+                </button>
+
+                <br>
+
+                <button class="close-btn" onclick="closePassword()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- INFORMATION SCREEN -->
+        <div class="info-screen" id="infoScreen">
+            <div class="info-icon" id="infoIcon">👤</div>
+
+            <h1 id="infoName"></h1>
+
+            <div class="message" id="infoMessage"></div>
+
+            <button class="back" onclick="closeInfo()">
+                ← Back to Home
+            </button>
+        </div>
+
+        <!-- SECRET ADMIN PANEL -->
+        <div class="admin-panel" id="adminPanel">
+
+            <h2>🔐 Secret Admin Panel</h2>
+
+            <div id="adminList"></div>
+
+            <button class="admin-close" onclick="closeAdmin()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+/* ==============================
+   APPS + PASSWORDS + MESSAGES
+   ============================== */
+
+const people = [
+
+    {
+        name: "Mam Sania",
+        icon: "👩‍🏫",
+        password: "sania123",
+        message: "Can I get an autograph because I found the best English teacher?"
+    },
+
+    {
+        name: "Fahad",
+        icon: "⚽",
+        password: "fahad123",
+        message: "Best soccer player! ❤️"
+    },
+
+    {
+        name: "Taha",
+        icon: "⚽",
+        password: "taha123",
+        message: "You have the best passes in football ever! ❤️"
+    },
+
+    {
+        name: "Arham",
+        icon: "🤝",
+        password: "arham123",
+        message: "The most loyal friend I've found! ❤️"
+    },
+
+    {
+        name: "Shafay",
+        icon: "😂",
+        password: "shafay123",
+        message: "The boy who sacrifices himself just to make us laugh! ❤️"
+    },
+
+    {
+        name: "Abdul Hadi",
+        icon: "📚",
+        password: "hadi123",
+        message: "You are the best in studies and football! ❤️"
+    },
+
+    {
+        name: "Faizan",
+        icon: "💪",
+        password: "faizan123",
+        message: "The strongest student! 🙌😎"
+    },
+
+    {
+        name: "Zaroon",
+        icon: "😎",
+        password: "zaroon123",
+        message: "You are so chill, brother!"
+    },
+
+    {
+        name: "Hambal",
+        icon: "🗿",
+        password: "hambal123",
+        message: "You are where sigma starts! 🙌"
+    },
+
+    {
+        name: "Ali",
+        icon: "👑",
+        password: "ali123",
+        message: "THE PRETTIEST PERSON IN PAKISTAN! ❤️👀"
+    }
+
+];
+
+let selectedPerson = null;
+
+
+/* ==============================
+   CREATE HOME SCREEN APPS
+   ============================== */
+
+const apps = document.getElementById("apps");
+
+people.forEach((person, index) => {
+
+    const app = document.createElement("div");
+
+    app.className = "app";
+
+    app.innerHTML = `
+        <div class="icon">${person.icon}</div>
+        <div class="app-name">${person.name}</div>
+    `;
+
+    app.onclick = () => openPassword(index);
+
+    apps.appendChild(app);
+
+});
+
+
+/* ==============================
+   OPEN APP PASSWORD
+   ============================== */
+
+function openPassword(index) {
+
+    selectedPerson = people[index];
+
+    document.getElementById("selectedName").textContent =
+        selectedPerson.name;
+
+    document.getElementById("passwordInput").value = "";
+
+    document.getElementById("error").textContent = "";
+
+    document.getElementById("passwordModal").style.display = "flex";
+
+    setTimeout(() => {
+        document.getElementById("passwordInput").focus();
+    }, 100);
+}
+
+
+/* ==============================
+   CHECK PASSWORD
+   ============================== */
+
+function checkPassword() {
+
+    const entered =
+        document.getElementById("passwordInput").value;
+
+    if (entered === selectedPerson.password) {
+
+        document.getElementById("passwordModal").style.display = "none";
+
+        document.getElementById("infoScreen").style.display = "block";
+
+        document.getElementById("infoName").textContent =
+            selectedPerson.name;
+
+        document.getElementById("infoIcon").textContent =
+            selectedPerson.icon;
+
+        document.getElementById("infoMessage").textContent =
+            selectedPerson.message;
+
+    } else {
+
+        document.getElementById("error").textContent =
+            "❌ Incorrect Admin Password";
+
+    }
+}
+
+
+/* ==============================
+   CLOSE PASSWORD
+   ============================== */
+
+function closePassword() {
+
+    document.getElementById("passwordModal").style.display = "none";
+
+}
+
+
+/* ==============================
+   CLOSE INFO
+   ============================== */
+
+function closeInfo() {
+
+    document.getElementById("infoScreen").style.display = "none";
+
+}
+
+
+/* ==============================
+   SECRET NOTCH PANEL
+   ============================== */
+
+function openAdmin() {
+
+    const panel = document.getElementById("adminPanel");
+
+    const list = document.getElementById("adminList");
+
+    list.innerHTML = "";
+
+    people.forEach(person => {
+
+        const card = document.createElement("div");
+
+        card.className = "admin-card";
+
+        card.innerHTML = `
+            <strong>${person.icon} ${person.name}</strong>
+            <span>Admin Password:</span>
+            <span class="password">${person.password}</span>
+        `;
+
+        list.appendChild(card);
+
+    });
+
+    panel.style.display = "block";
+}
+
+
+/* ==============================
+   CLOSE SECRET PANEL
+   ============================== */
+
+function closeAdmin() {
+
+    document.getElementById("adminPanel").style.display = "none";
+
+}
+
+
+/* ENTER KEY PASSWORD */
+document.getElementById("passwordInput").addEventListener("keydown", function(e) {
+
+    if (e.key === "Enter") {
+        checkPassword();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
