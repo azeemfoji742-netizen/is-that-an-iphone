@@ -643,3 +643,62 @@ document.getElementById("passwordInput").addEventListener("keydown", function(e)
 
 </body>
 </html>
+<script>
+/* GPS APP — same grid as other apps */
+
+const gpsApp = document.createElement("div");
+gpsApp.className = "app";
+
+gpsApp.innerHTML = `
+    <div class="icon" style="
+        background:linear-gradient(135deg,#38bdf8,#0369a1);
+    ">📍</div>
+    <div class="app-name">GPS</div>
+`;
+
+gpsApp.onclick = function () {
+
+    if (!navigator.geolocation) {
+        alert("GPS is not supported by this browser.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const maps =
+                "https://www.google.com/maps?q=" +
+                lat + "," + lon;
+
+            if (confirm(
+                "📍 Location Found!\n\n" +
+                "Latitude: " + lat.toFixed(6) + "\n" +
+                "Longitude: " + lon.toFixed(6) +
+                "\n\nOpen in Google Maps?"
+            )) {
+
+                window.open(maps, "_blank");
+            }
+        },
+
+        function() {
+            alert(
+                "Location permission denied.\n" +
+                "Please allow location access."
+            );
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+};
+
+apps.appendChild(gpsApp);
+</script>
